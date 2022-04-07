@@ -21,13 +21,16 @@ def handle_three():
 # check csv for song id stuff
 # if not in csv, add to csv
 # remember to activate environment (DS) locally
+# make a way to change path on the fly?
+# error in downloading playlist causes not to update csv
+# make a way to create a new folder on the fly as well
 
 from pytube import YouTube
 from pytube import Playlist
 import sys
 import csv
 
-path = "/Users/trevor/Desktop/illegal_music_lol/disco"
+path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol"
 
 def timeToMin(raw_sec):
     seconds = raw_sec % 60
@@ -39,15 +42,33 @@ class Video:
     self.title = title
     self.author = author
 
-# Check downloads if they are there
-# def checkDownloads(csv, list): # fix this
-#     with open(csv, newline='') as csvfile:
-#         reader = csv.DictReader(csvfile)
-#         for row in reader:
-#             print(list[row].title, list[row].author)
+def scanFiles(csvFile,path=path):
+  '''
+  I need a function that scans every mp4 file and puts it into the csv without reading into anything --> write to file?
+  '''
+  pass
+
+# Check downloads if they are there --> What is a better structure? maybe add to list in check song, interesting idea
+
+def checkSong(csv_file, song, artist): # fix this
+  '''
+  still trying to figure out when I should do the checks for the song. 
+  I should do it before I download the song, and maybe this function has the download in it?
+  '''
+  pass
+#     with open(csv_file, 'rt') as f:
+#       reader = csv.reader(f, delimiter=',')
+#       for row in reader: # make it so that it checks every row, not just the first row
+#             print(row)
+#             if (song == row[0]) and (artist == row[1]): # test song
+#                 print('False')
+#                 return False
+#             else:
+#                 print('True')
+#                 return True
 
 def updateDownloads(csv_file,listy):
-    with open(csv_file, 'w', newline='') as csvfile: # change to append to check for songs
+    with open(csv_file, 'a', newline='') as csvfile: # change to append to check for songs
         writer = csv.writer(csvfile, delimiter=',')
         for video in listy:
             writer.writerow([video.title]+[video.author[:-8]])
@@ -55,29 +76,34 @@ def updateDownloads(csv_file,listy):
 def download_song(link):
     yt=YouTube(link)
     t=yt.streams.filter(only_audio=True)
-    # path = "/Users/trevor/Desktop/ytmDownloader/test
+    checkSong('Songlist.csv',yt.title,yt.author)
     filename=yt.title+" - "+yt.author[:-8]+".mp4"
-    print(yt.title+" - "+yt.author[:-8])
-    print("length: "+timeToMin(yt.length))
-    print('download to: '+path)
+    print('\n')
+    print("Name: "+yt.title+" - "+yt.author[:-8])
+    print("Length: "+timeToMin(yt.length))
+    print("Listens: "+str(yt.views))
+    print('Download Path: '+path)
     t[1].download(path,filename=filename)
+    print('---Sucess---')
+    print('\n')
 
 def download_playlist(link):
   pl = Playlist(link)
   for video in pl.videos:
-      filename=video.title+" - "+video.author[:-8]+".mp3"
-      vid_list.append(Video(video.title,video.author))
-      print(f'Downloading: {video.title}')
-      t=video.streams.filter(only_audio=True)
-      # path = "/Users/trevor/Desktop/ytmDownloader/test"
-      filename=video.title+" - "+video.author[:-8]+".mp4" 
-      print("Name: "+video.title+" - "+video.author[:-8])
-      print("Length: "+timeToMin(video.length))
-      print('Download Path: '+path)
-      print('\n')
-      t[1].download(path,filename=filename) # issue with this sometimes
+    # if checkSong('Songlist.csv',video.title,video.author[:-8]):
+    vid_list.append(Video(video.title,video.author)) 
+    print(f'Downloading: {video.title}')
+    t=video.streams.filter(only_audio=True)
+    filename=video.title+" - "+video.author[:-8]+".mp4"
+    print("Name: "+video.title+" - "+video.author[:-8])
+    print("Length: "+timeToMin(video.length))
+    print("Listens: "+str(video.views))
+    print('Download Path: '+path)
+    t[1].download(path,filename=filename) # issue with this sometimes
+    print('---Sucess---')
+    print('\n')
 
-if sys.argv[1] == "s":
+if sys.argv[1] == 's':
     link = str(sys.argv[2])
     download_song(link)
 
