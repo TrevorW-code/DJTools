@@ -35,7 +35,7 @@ import sys
 import csv
 import re
 
-path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol"
+path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol/temp"
 
 def timeToMin(raw_sec):
   seconds = raw_sec % 60
@@ -164,7 +164,8 @@ def download_song(link):
 
 def download_playlist(link):
   pl = Playlist(link)
-  for video in pl.videos:
+  for idx,video in enumerate(pl.videos):
+    print(f"[{idx+1}/{len(pl)}]")
     # if checkSong('Songlist.csv',video.title,video.author[:-8]):
     vid_list.append(Video(video.title,video.author)) 
     print(f'Downloading: {video.title}')
