@@ -25,29 +25,102 @@ def handle_three():
 # error in downloading playlist causes not to update csv
 # make a way to create a new folder on the fly as well
 
+# from typing_extensions import Self
 from pytube import YouTube
 from pytube import Playlist
+import os
+import argparse
+import pandas as pd
 import sys
 import csv
+import re
 
 path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol"
 
 def timeToMin(raw_sec):
-    seconds = raw_sec % 60
-    min = raw_sec // 60
-    return (str(min)+"min "+str(seconds)+"s")
+  seconds = raw_sec % 60
+  min = raw_sec // 60
+  return (str(min)+"min "+str(seconds)+"s")
+
+class Song(YouTube):
+  def __init__(self, url):
+    self.filename = self.title+" - "+self.author[:-8]+".mp4" # is this how inheritance works?
+    super().__init__(url) # how do I inherit from this? do I need every single thing
+
+
+  def song_stats(instance):
+    # time, grab song data from spotify api or tunebat
+    print("Name: "+instance.title+" - "+instance.author[:-8])
+    print("Length: "+timeToMin(instance.length))
+    print("Listens: "+str(instance.views))
+    print('Download Path: '+path)
+    print('success')
+    # https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
+    # https://medium.com/swlh/spotify-song-prediction-and-recommendation-system-b3bbc71398ad
+
+  def download_song(instance,filename):
+    pass
+    t=instance.streams.filter(only_audio=True)
+    print('download test')
+    # t[1].download(path,filename=filename)
+
+
+#     yt=YouTube(link)
+#     t=yt.streams.filter(only_audio=True)
+#     checkSong('Songlist.csv',yt.title,yt.author)
+#     filename=yt.title+" - "+yt.author[:-8]+".mp4"
+#     filename = re.sub("\"","’",filename) # do different 
+
+
+
+#     print('---Sucess---')
+
+
+
+# if sys.argv[1] == 's':
+#     link = str(sys.argv[2])
+#     yt=YouTube(link)
+#     song = Song(yt)
+#     # song.song_stats
+
+
+# if sys.argv[1] == 'pl':
+#     vid_list = []
+#     link = str(sys.argv[2])
+#     download_playlist(link)
+#     updateDownloads("Songlist.csv",vid_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Video:
   def __init__(self, title, author):
     self.title = title
     self.author = author
 
+
 def scanFiles(csvFile,path=path):
   '''
   I need a function that scans every mp4 file and puts it into the csv without reading into anything --> write to file?
   '''
-  pass
-
+  # for _, dirs, file in os.walk(path):
+    # if file
+    # if the format is "Arist - Song"
+      # split on Artist - Song
+    # if it is not in "Arist - Song"
+      # first column is song, second is unknown
 # Check downloads if they are there --> What is a better structure? maybe add to list in check song, interesting idea
 
 def checkSong(csv_file, song, artist): # fix this
@@ -67,19 +140,21 @@ def checkSong(csv_file, song, artist): # fix this
 #                 print('True')
 #                 return True
 
-def updateDownloads(csv_file,listy):
-    with open(csv_file, 'a', newline='') as csvfile: # change to append to check for songs
-        writer = csv.writer(csvfile, delimiter=',')
-        for video in listy:
-            writer.writerow([video.title]+[video.author[:-8]])
+def updateDownloads(csv_file,song):
+  pass
+  # with open(csv_file, 'a', newline='') as csvfile: # change to append to check for songs
+  #     writer = csv.writer(csvfile, delimiter=',')
+  #     writer.writerow([song.title]+[song.author[:-8]])
 
 def download_song(link):
     yt=YouTube(link)
     t=yt.streams.filter(only_audio=True)
     checkSong('Songlist.csv',yt.title,yt.author)
     filename=yt.title+" - "+yt.author[:-8]+".mp4"
+    filename = re.sub("\"","’",filename) # do different 
+
     print('\n')
-    print("Name: "+yt.title+" - "+yt.author[:-8])
+    print("Name: "+filename)
     print("Length: "+timeToMin(yt.length))
     print("Listens: "+str(yt.views))
     print('Download Path: '+path)
@@ -95,6 +170,7 @@ def download_playlist(link):
     print(f'Downloading: {video.title}')
     t=video.streams.filter(only_audio=True)
     filename=video.title+" - "+video.author[:-8]+".mp4"
+    filename = re.sub("\"","’",filename) # do different 
     print("Name: "+video.title+" - "+video.author[:-8])
     print("Length: "+timeToMin(video.length))
     print("Listens: "+str(video.views))
