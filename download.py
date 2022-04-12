@@ -1,6 +1,10 @@
 '''
 
+metadata --> https://docs.python.org/3/library/os.html#os.setxattr
+
 want to add flags for downloading playlists (pl or p) and individual songs (s)
+
+
 
 def handle_one():
   do_stuff
@@ -49,27 +53,21 @@ class Video:
     self.author = author
 
 
-def scanFiles(csvFile,path=path): # only for current files
+def RefreshLibrary(csvFile,path=path): # only for current files
   '''
   I need a function that scans every mp4 file and puts it into the csv without reading into anything --> write to file?
   '''
-  
-  for _, dirs, file_names in os.walk(path):
-    # pprint.pprint(file_names)
-    for file_name in file_names:
-      song = file_name.split(" - ",1)
-      print(song)
-
-
-    break
-    # with open(csvFile, 'a', newline='') as csvfile: # change to append to check for songs
-      # writer = csv.writer(csvfile, delimiter=',')
-      # writer.writerow([song.title]+[song.author[:-8]])
-    # if the format is "Arist - Song"
-      # split on Artist - Song
-    # if it is not in "Arist - Song"
-      # first column is song, second is unknown
-# Check downloads if they are there --> What is a better structure? maybe add to list in check song, interesting idea
+  with open(csvFile, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    for _, dirs, file_names in os.walk(path):
+      for file_name in file_names:
+        song = file_name.split(" - ",1)
+        print(song)
+        try:
+          writer.writerow([song[0]]+[re.sub('.mp[0-9]','',song[1])]) 
+        except IndexError:
+          writer.writerow(song+["__UNKNOWN__"]) # how do I add an empty column?
+    print('---Done---')
 
 def checkSong(csv_file, song, artist): # fix this
   '''
@@ -138,5 +136,5 @@ if sys.argv[1] == 'pl':
   download_playlist(link)
   updateDownloads("Songlist.csv",vid_list)
 
-if sys.argv[1] == 'scan':
-  scanFiles("Songlist.csv")
+if sys.argv[1] == 'refresh':
+  RefreshLibrary("Songlist.csv")
