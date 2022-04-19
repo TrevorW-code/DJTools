@@ -1,4 +1,15 @@
 import csv
+# import spotipy
+# from spotipy.oauth2 import SpotifyOAuth
+import json
+
+path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol"
+
+def load_json_opts():
+    with open ('ydl_opts.json') as f:
+        options = json.load(f)
+    return options
+
 
 def refresh_library(csv_file, path=path): # only for current files
   '''
@@ -23,3 +34,10 @@ def refresh_library(csv_file, path=path): # only for current files
         except IndexError:
           writer.writerow(song+["__UNKNOWN__"]) # how do I add an empty column?
     print('---Done---')
+
+
+def get_features():
+    '''
+    
+    '''
+    pass
