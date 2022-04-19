@@ -35,12 +35,8 @@ import csv
 import re
 import pprint
 
-path = "/Users/trevor/Desktop/ytmDownloader/illegal_music_lol"
+from utils import refresh_library, seconds_to_minutes, path
 
-def seconds_to_minutes(raw_sec):
-  seconds = raw_sec % 60
-  min = raw_sec // 60
-  return (str(min)+"min "+str(seconds)+"s")
 
 class Video:
   def __init__(self, title, author):
@@ -64,51 +60,6 @@ def clean_input(string):
       if letter == bad_character:
         re.sub(bad_character, '', string)
   return string
-
-def refresh_library(csv_file, path=path): # only for current files
-  '''
-  function that scans current library, reads them into csv.
-  '''
-
-  # AS: maybe use pandas here? could be a lot cleaner
-  # TW: I was thinking this, but I am walking the directory so I was wondering if OS is the best
-  # TW: ugly, but not sure another method
-
-  # AS: prioritize readability over performance, the difference is gonna be so marginal it's not worth the tradeoff
-  # TW: ok
-
-  with open(csv_file, 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile, delimiter=',')
-    for _, dirs, file_names in os.walk(path):
-      for file_name in file_names:
-        song = file_name.split(" - ",1)
-        print(song)
-        try:
-          writer.writerow([song[0]]+[re.sub('.mp[0-9]','',song[1])]) 
-        except IndexError:
-          writer.writerow(song+["__UNKNOWN__"]) # how do I add an empty column?
-    print('---Done---')
-
-# AS: snake case
-# AS: what does this method do?
-def check_song(csv_file, song, artist): # fix this
-  '''
-  still trying to figure out when I should do the checks for the song. 
-  I should do it before I download the song, and maybe this function has the download in it?
-
-  Don't really need this
-  '''
-  with open(csv_file, 'rt') as f:
-    reader = csv.reader(f, delimiter=',')
-    check = ''
-    for row in reader: # make it so that it checks every row, not just the first row
-      print(row)
-      if (song == row[0]) and (artist == row[1]): # test song
-        check = 'pass'
-        return True
-      else:
-        check = 'fail'
-    
 
 def add_song_data(csv_file,song):
 
@@ -145,7 +96,7 @@ def download_song(link):
 
   print('\n')
   print("Name: "+filename)
-  print("Length: "+timeToMin(yt.length))
+  print("Length: "+seconds_to_minutes(yt.length))
   print("Listens: "+str(yt.views))
   print('Download Path: '+path)
   t[1].download(path,filename=filename)
@@ -208,4 +159,5 @@ if sys.argv[1] == 'refresh':
   refresh_library("Songlist.csv")
 
 if sys.argv[1] == 'test':
-  clean_input('NASTY GIRL / ON CAMERA')
+  pdb.set_trace
+  clean_input()

@@ -1,9 +1,3 @@
-
-def seconds_to_minutes(raw_sec):
-  seconds = raw_sec % 60
-  min = raw_sec // 60
-  return (str(min)+"min "+str(seconds)+"s")
-
 class Song():
     def __init__(self, length, title, author, views, path):
             self.length = length
