@@ -1,5 +1,5 @@
 
-def timeToMin(raw_sec):
+def seconds_to_minutes(raw_sec):
   seconds = raw_sec % 60
   min = raw_sec // 60
   return (str(min)+"min "+str(seconds)+"s")
@@ -15,7 +15,7 @@ class Song():
     def song_stats(self, length, title, author, views, path):
     # time, grab song data from spotify api or tunebat
         print("Name: "+title+" - "+author)
-        print("Length: "+timeToMin(length))
+        print("Length: "+seconds_to_minutes(length))
         print("Listens: "+str(views))
         print('Download Path: '+ path)
         print('success')
