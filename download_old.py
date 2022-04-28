@@ -74,6 +74,7 @@ def add_song_data(csv_file,song):
 
 def download_song(link):
   '''
+  depreciated
   use mutagen for song metadata
   '''
   # yt=YouTube(link)
@@ -105,6 +106,7 @@ def download_song(link):
 
 
 def download_playlist(link):
+  # depreciatedf
   # AS: does the yt library have a download playlist feature?? seems like core functionality imo
   # AS: also you could maybe parallelize this if you're feeling ~spicy~
   # TW: I am feeling ~spicy~
@@ -127,23 +129,6 @@ def download_playlist(link):
     
     print('---Sucess---')
     print('\n')
-
-"""
-AS: I think this should be wrapped in if __name__ == '__main__' ... could be totally wrong ngl
-TW: yeah the question is how do I start a session, I was thinking of maube using while True: and then have it wrap to an input if that makes sense
-
-mmh yeah like just let the user input whatever they like and the system would stay running?
-TW:yes, because I hate typing in python download.py everytime
-
-TW: also having a way to distinguish when you are downloading during an actual party or not by activating "session"
-TW: making the recommender soon for this, just need to finish the objects
-
-oh yea
-
-i'd clean this up a bit before the recommender stuff tbh
-
-TW: yes, this is what I am thinking, I agree
-"""
 
 if sys.argv[1] == 's':
   link = str(sys.argv[2])

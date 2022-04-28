@@ -20,15 +20,13 @@ def load_json_opts():
         options = json.load(f)
     return options
 
-
 def refresh_library(csv_file, path=path): # only for current files
-
   with open(csv_file, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for _, dirs, file_names in os.walk(path):
       for file_name in file_names:
         print(path)
-        key = mutagen.File(str(path+"/"+file_name))['TKEY'] # need something that works for mp4 and mp3
+        key = mutagen.File(str(path+"/"+file_name))['TKEY'] # need something that works for mp4 and m4a
         print(key)
         bpm = mutagen.File(str(path+"/"+file_name))['TBPM']
         print(bpm)

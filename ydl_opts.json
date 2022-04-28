@@ -1,7 +1,16 @@
 {
 "format": "m4a/bestaudio/best",
+"writethumbnail":"true",
+"writesubtitles":"true",
+"noplaylist":"true",
+"outtmpl":"%(title)s.%(ext)s",
 "postprocessors": [{ 
     "key": "FFmpegExtractAudio",
     "preferredcodec": "m4a"
-}]
+}, {
+    "key": "FFmpegMetadata"
+}, {
+    "key": "EmbedThumbnail",
+    "already_have_thumbnail": "true"
+    }]
 }
