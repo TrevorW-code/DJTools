@@ -3,7 +3,7 @@
 "writethumbnail":"true",
 "writesubtitles":"true",
 "noplaylist":"true",
-"outtmpl":"%(title)s.%(ext)s",
+"outtmpl":"%(title)s.%(id)s",
 "postprocessors": [{ 
     "key": "FFmpegExtractAudio",
     "preferredcodec": "m4a"
